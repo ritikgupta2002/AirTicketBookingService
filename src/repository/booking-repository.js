@@ -20,14 +20,14 @@ class BookingRepository {
     }
   }
 
-  async updateBooking(bookingId, data) {
+  async update(bookingId, data) {
     try {
-      await Booking.update(data, {
-        where: {
-          id: bookingId,
-        },
-      });
-      return true;
+      const booking = await Booking.findByPk(bookingId);
+      if (data.status) {
+        booking.status = data.status;
+      }
+      await booking.save();//changes made are saved in repository .if you dont write this the changes made will be lost 
+      return booking;
     } catch (error) {
       throw new AppError(
         "RepositoryError",

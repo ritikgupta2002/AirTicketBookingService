@@ -24,15 +24,18 @@ class BookingService {
       }
       const totalCost = priceOfTheFlight * data.noOfSeats;
       const bookingPayload = { ...data, totalCost }; //destructuring the object and adding the new property
-      console.log("booking payload ", bookingPayload);
+      // console.log("booking payload ", bookingPayload);
       const booking = await this.bookingRepository.create(bookingPayload);
-      console.log("booking", booking);
+      // console.log("booking", booking);
       const updateFlightRequestURL = `${FLIGHT_SERVICE_PATH}/api/v1/flights/${booking.flightId}`;
       await axios.patch(updateFlightRequestURL, {
         totalSeats: flightData.totalSeats - booking.noOfSeats,
       });
+      const finalBooking = await this.bookingRepository.update(booking.id, {
+        status: "Booked",
+      });
 
-      return booking;
+      return finalBooking;
     } catch (error) {
       if (error.name == "RepositoryError" || error.name == "ValidationError") {
         throw error;
