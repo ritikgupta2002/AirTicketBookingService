@@ -8,7 +8,7 @@ class BookingService {
     this.bookingRepository = new BookingRepository();
   }
 
-  async createBooking(data) {
+  async createBooking(data) { 
     try {
       const flightId = data.flightId;
       let getFlightRequestURL = `${FLIGHT_SERVICE_PATH}/api/v1/flights/${flightId}`;
@@ -34,7 +34,6 @@ class BookingService {
       const finalBooking = await this.bookingRepository.update(booking.id, {
         status: "Booked",
       });
-
       return finalBooking;
     } catch (error) {
       if (error.name == "RepositoryError" || error.name == "ValidationError") {
