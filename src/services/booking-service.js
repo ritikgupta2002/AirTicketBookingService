@@ -13,7 +13,6 @@ class BookingService {
       const flightId = data.flightId;
       let getFlightRequestURL = `${FLIGHT_SERVICE_PATH}/api/v1/flights/${flightId}`;
       const response = await axios.get(getFlightRequestURL);
-      // console.log("FROM BOOKING SERVICE",response.data.data);
       const flightData = response.data.data;
       let priceOfTheFlight = flightData.price;
       if (data.noOfSeats > flightData.totalSeats) {
@@ -24,9 +23,7 @@ class BookingService {
       }
       const totalCost = priceOfTheFlight * data.noOfSeats;
       const bookingPayload = { ...data, totalCost }; //destructuring the object and adding the new property
-      // console.log("booking payload ", bookingPayload);
       const booking = await this.bookingRepository.create(bookingPayload);
-      // console.log("booking", booking);
       const updateFlightRequestURL = `${FLIGHT_SERVICE_PATH}/api/v1/flights/${booking.flightId}`;
       await axios.patch(updateFlightRequestURL, {
         totalSeats: flightData.totalSeats - booking.noOfSeats,
